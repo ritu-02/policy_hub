@@ -32,11 +32,11 @@ public class UserPolicy {
 	
 	@OneToOne
 	@JoinColumn(name="user_id")
-	private Long userId;
+	private User user;
 	
 	@OneToOne
-	@JoinColumn(name="user_id")
-	private Long policyId;
+	@JoinColumn(name="policy_id")
+	private PolicyPlan policyPlan;
 	
 	@Column(name="start_date")
 	private LocalDate startDate;
