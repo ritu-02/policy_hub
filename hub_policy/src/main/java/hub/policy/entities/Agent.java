@@ -36,7 +36,7 @@ public class Agent {
 	private User userId;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "assigned_users")
+	@JoinColumn(name = "assigned_agent_id")
 	private List<User> assignedUsers;
 
 }

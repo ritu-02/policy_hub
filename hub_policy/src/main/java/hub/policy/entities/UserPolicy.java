@@ -9,10 +9,20 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name="user_policies")
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class UserPolicy {
 	
 	@Id
@@ -20,10 +30,12 @@ public class UserPolicy {
 	@Column(name="user_policy_id")
 	private Long userPolicyId;
 	
-	@Column(name="user_id")
+	@OneToOne
+	@JoinColumn(name="user_id")
 	private Long userId;
 	
-	@Column(name="policy_id")
+	@OneToOne
+	@JoinColumn(name="user_id")
 	private Long policyId;
 	
 	@Column(name="start_date")
