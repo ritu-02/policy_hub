@@ -27,7 +27,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public AuthResponse authenticateUser(AuthRequest request) {
-		User entity=userDao.findByEmailAndPassword(request.getEmail(), request.getPassword()).orElseThrow(() -> new AuthenticationException("Invalid email or password"));
+		User entity=userDao.findByEmailAndPassword(request.getEmail(), request.getPassword())
+				.orElseThrow(() -> new AuthenticationException("Invalid email or password"));
 		return mapper.map(entity, AuthResponse.class);
 	}
 
