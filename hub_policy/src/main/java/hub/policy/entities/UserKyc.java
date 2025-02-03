@@ -28,7 +28,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
 public class UserKyc {
 	
 	@Id
@@ -45,16 +44,16 @@ public class UserKyc {
 	@Column(name="document_type",nullable=false)
 	private DocumentType documentType;
 	
-	@Column(name="document_number",nullable=false, length =50)
+	@Column(name="document_number",nullable=false, length =50,unique=true)
 	@NotNull(message="documentNumber cannot be null ")
 	private String documentNumber;
 	
-	@Column(name="document_url",nullable=false)
+	@Column(name="document_url",nullable=false,unique=true)
 	@NotNull(message="kycStatus cannot be null ")
 	private String documentUrl;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name="kyc_status",nullable=false)
+	@Column(name="kyc_status",nullable=false,columnDefinition = "ENUM('PENDING', 'VERIFIED', 'REJECTED') DEFAULT 'PENDING'")
 	private KYCStatus kycStatus;
 	
 	@Column(name="uploaded_at")
