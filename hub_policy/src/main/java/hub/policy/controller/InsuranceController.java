@@ -2,6 +2,8 @@ package hub.policy.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import hub.policy.entities.PolicyPlan;
 import hub.policy.service.InsuranceService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/insurance")

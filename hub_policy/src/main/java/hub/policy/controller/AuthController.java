@@ -21,8 +21,8 @@ import hub.policy.security.JwtUtils;
 import hub.policy.service.UserService;
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/api/auth")
+public class AuthController {
     @Autowired
 	private UserService userService;
     @Autowired
@@ -31,14 +31,15 @@ public class UserController {
     private AuthenticationManager mgr;
     
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody @Valid AuthRequest request){
+    public ResponseEntity<?> logIn(@RequestBody @Valid AuthRequest request){
     	
     	Authentication verifiedAuth =mgr.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-    	return ResponseEntity.ok(new AuthResponse(utils.generateJwtToken(verifiedAuth),"Successful Authentication!!!"));
+    	String token=utils.generateJwtToken(verifiedAuth);
+    	return ResponseEntity.ok(new AuthResponse(token,"Successful Authentication!!!"));
     }
     
     @PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@RequestBody @Valid Signup userDetails){
+	public ResponseEntity<?> signUp(@RequestBody @Valid Signup userDetails){
     		return ResponseEntity.status(HttpStatus.CREATED)
  				.body(userService.userRegistration(userDetails));   
 	}

@@ -18,7 +18,7 @@ public class CustomUserDetailsService {
    
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
     	User user =userDao.findByEmail(email)
-    			          .orElseThrow(()-> new UsernameNotFoundException(email));
+    			          .orElseThrow(()-> new UsernameNotFoundException("Email not found"));
     	return new CustomUserDetails(user);
     }
 }

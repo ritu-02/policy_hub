@@ -96,10 +96,7 @@
 			<artifactId>commons-lang3</artifactId>
 			<!-- <version>3.14.0</version> -->
 		</dependency>
-<<<<<<< HEAD
-=======
 		
->>>>>>> f2dc55c4ca60024ccb340b4b5f277d7520150227
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>

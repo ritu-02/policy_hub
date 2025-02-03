@@ -1,4 +1,4 @@
-package com.blogs;
+package hub.policy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
