@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import hub.policy.custom_exceptions.ResourceNotFoundException;
 import hub.policy.dao.UserKycDao;
 import hub.policy.dto.ApiResponse;
 import hub.policy.dto.KycDto;
@@ -48,11 +49,13 @@ public class UserKycServiceImpl implements UserKycService{
     	return "KYC submitted successfully!";
     	
     }
-    
-//	public KycDto getUserKycStatus(Long userId) {
-//		KYCStatus status=userKycDao.getKycStatus(userId).orElseThrow(() -> new RuntimeException("User has not applied for kyc"));
-//		return mapper.map(status, KycDto.class);
-//	}
+
+    @Override
+	public KycDto getUserKycStatus(Long userId) {
+		KYCStatus kycStatus=userKycDao.getKycStatus(userId).orElseThrow(() -> new ResourceNotFoundException("User does not have KYC"));
+		return mapper.map(kycStatus, KycDto.class);
+	}
+
 
      
 }

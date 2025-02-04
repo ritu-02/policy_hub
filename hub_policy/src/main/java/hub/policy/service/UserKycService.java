@@ -9,6 +9,6 @@ import hub.policy.dto.KycDto;
 public interface UserKycService {
 	 public String verifyKyc(String documentType,String documentNumber,MultipartFile file) throws IOException;
 	 
-	 //public KycDto getUserKycStatus(Long userId);
+	 public KycDto getUserKycStatus(Long userId);
 
 }

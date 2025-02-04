@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import hub.policy.custom_exceptions.BadCredentialsExcption;
+import hub.policy.custom_exceptions.UnauthorizedException;
+import hub.policy.custom_exceptions.UnauthorizedRoleException;
 import hub.policy.dto.ApiResponse;
 import hub.policy.dto.AuthRequest;
 import hub.policy.dto.AuthResponse;
@@ -32,10 +35,15 @@ public class AuthController {
     
     @PostMapping("/login")
     public ResponseEntity<?> logIn(@RequestBody @Valid AuthRequest request){
-    	
-    	Authentication verifiedAuth =mgr.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+    	try {
+    	Authentication verifiedAuth = mgr.authenticate(
+    			new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+    			);
     	String token=utils.generateJwtToken(verifiedAuth);
     	return ResponseEntity.ok(new AuthResponse(token,"Successful Authentication!!!"));
+    	}catch (BadCredentialsExcption e) {
+			throw new UnauthorizedException("Invalid email or password");
+		}
     }
     
     @PostMapping("/signup")

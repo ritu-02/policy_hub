@@ -8,7 +8,7 @@ public interface UserService {
 	//login method
   AuthResponse authenticateUser(AuthRequest request);
     //user registration method
-  Signup userRegistration(Signup reqDTO);
+  String userRegistration(Signup reqDTO);
 
 	
 }

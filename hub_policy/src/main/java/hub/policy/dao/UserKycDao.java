@@ -12,8 +12,8 @@ import hub.policy.entities.UserKyc;
 
 @Repository
 public interface UserKycDao extends JpaRepository<UserKyc, Long>{
-//  @Query("select k.KycStatus from UserKyc k where k.userId= :id ")
-//  Optional<KYCStatus> getKycStatus(Long id);
+  @Query("select k.KycStatus from UserKyc k where k.userId= :id ")
+  Optional<KYCStatus> getKycStatus(Long id);
   
   Optional<UserKyc> findByDocumentNumber(String documentNumber);
   

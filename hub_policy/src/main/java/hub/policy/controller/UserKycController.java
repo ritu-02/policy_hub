@@ -16,16 +16,16 @@ import hub.policy.service.UserKycServiceImpl;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-@RequestMapping("/userkyc")
+@RequestMapping("/customer/userkyc")
 public class UserKycController {
 	@Autowired
 	private UserKycServiceImpl userKycService;
      
-//	@GetMapping("/{userId}")
-//	public ResponseEntity<?> getUserKycStatus(@PathVariable Long userId){
-//		return ResponseEntity.status(HttpStatus.FOUND)
-//				.body(userKycService.getUserKycStatus(userId));
-//	}
+	@GetMapping("/{userId}")
+	public ResponseEntity<?> getUserKycStatus(@PathVariable Long userId){
+		return ResponseEntity.status(HttpStatus.FOUND)
+				.body(userKycService.getUserKycStatus(userId));
+	}
 	
 	@PostMapping("/submit")
 	public ResponseEntity<?> submitKyc(@RequestBody KycRequestDto kycObj ){
