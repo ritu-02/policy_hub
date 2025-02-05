@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,20 +31,25 @@ public class SecurityConfig {
     private CustomAuthenticationEntryPoint authEntry;
 	
 	public SecurityFilterChain authorizeRequests(HttpSecurity http) throws Exception{
-		http.cors()
-		    .and()
-		    .csrf(csrf -> csrf.disable())
+		http.cors(csrf -> csrf.disable())
 		    .authorizeHttpRequests(
 		    		auth -> auth
-		    		.antMatchers("/api/auth/**","/admin/**","/customer/**","/v*/api-doc*/**","/swagger-ui/**").permitAll()
-		    		.antMatchers(HttpMethod.OPTIONS).permitAll()
-		    		.antMatchers("/admin/**").hasRole("ADMIN")
-		    		.antMatchers("/customer/**").hasRole("CUSTOMER")
+		    		.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+		    		.antMatchers(
+		    				"/v*/api-doc*/**", //OpenAPI documentation
+		    				"/swagger-ui/**", //Swagger UI
+		    				"/swagger-resources/**", //Swagger resources
+		    				"/webjars/**" //WebJars used by Swagger
+		    ).permitAll()
+		    		.antMatchers("/api/auth/login","/api/auth/register").permitAll() // public end points
+		    		.antMatchers("/admin/**").hasRole("ADMIN") //Admin-specific endpoints
+		    		.antMatchers("/customer/**").hasRole("CUSTOMER") //Customer - specific end points
 		    		.anyRequest().authenticated()
 		    )
-		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		    .httpBasic(Customizer.withDefaults()) // enable optional HTTP Basic Authentication
+		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless sessions
 		.exceptionHandling(exception -> exception.authenticationEntryPoint(authEntry))
-		.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+		.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); //Add JWT filter
 		
 		return http.build();
 	}

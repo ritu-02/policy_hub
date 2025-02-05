@@ -12,10 +12,10 @@ import hub.policy.entities.UserKyc;
 
 @Repository
 public interface UserKycDao extends JpaRepository<UserKyc, Long>{
-  @Query("select k.KycStatus from UserKyc k where k.userId= :id ")
-  Optional<KYCStatus> getKycStatus(Long id);
-  
-  Optional<UserKyc> findByDocumentNumber(String documentNumber);
+  @Query("SELECT k.kycStatus FROM UserKyc k WHERE k.userId = :id ")
+  Optional<KYCStatus> getKycStatus(@Param("id") Long id);
+  @Query("SELECT k FROM UserKyc k WHERE LOWER(k.documentNumber) = LOWER(:documentNumber)")
+  Optional<UserKyc> findByDocumentNumber(@Param("documentNumber") String documentNumber);
   
   boolean existsByDocumentNumber(String documentNumber);
 

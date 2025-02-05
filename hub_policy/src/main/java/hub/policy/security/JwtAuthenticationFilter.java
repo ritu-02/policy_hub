@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,32 +22,38 @@ import io.jsonwebtoken.Claims;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtils utils;
+    private final JwtUtils utils;
+    private final CustomUserDetailsService userDetailsService;
+    
+    public JwtAuthenticationFilter(JwtUtils utils,CustomUserDetailsService userDetailsService) {
+    	this.utils=utils;
+    	this.userDetailsService=userDetailsService;
+    }
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-
-		String authHeader=request.getHeader("Authorization");
+ 
+		final String authorizationHeader =request.getHeader("Authorization");
 		
-		if(authHeader != null && authHeader.startsWith("Bearer")) {
+		String username=null;
+		String token=null;
+		
+		if(authorizationHeader !=null && authorizationHeader.startsWith("Bearer")) {
+			token =authorizationHeader.substring(7);
+			username=utils.extractEmail(token);
+		}
+		
+		if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			UserDetails userDetails =userDetailsService.loadUserByUsername(username);
 			
-			String jwt = authHeader.substring(7);
-			
-			Claims payloadClaims = utils.validateJwtToken(jwt);
-			
-			String email=utils.getUserNameFromJwtToken(payloadClaims);
-			
-			List<GrantedAuthority> authorities = utils.getAuthoritiesFromClaims(payloadClaims);
-			
-			UsernamePasswordAuthenticationToken token=new UsernamePasswordAuthenticationToken(email, null,authorities);
-			
-			SecurityContextHolder.getContext().setAuthentication(token);
-			System.out.println("saved auth token in sec context");
+			if(utils.validateToken(token,userDetails.getUsername())) {
+				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,userDetails.getAuthorities());
+				authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+			}
 		}
 		filterChain.doFilter(request, response);
-		
 	}
 
 }
