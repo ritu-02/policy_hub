@@ -1,14 +1,29 @@
 package hub.policy.service;
 
-import hub.policy.dto.AuthRequest;
-import hub.policy.dto.AuthResponse;
-import hub.policy.dto.Signup;
+import java.util.List;
 
-public interface UserService {
-	//login method
-  AuthResponse authenticateUser(AuthRequest request);
-    //user registration method
-  String userRegistration(Signup reqDTO);
+import java.util.stream.Collectors;
 
-	
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import hub.policy.dao.UserDao;
+import hub.policy.dto.AdminResponseDTO;
+
+
+@Service
+@Transactional
+public class UserService {
+	//to fetch all user details
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private ModelMapper mapper;
+    
+	public List<AdminResponseDTO> getAllUsersList() {
+		return userDao.findAll().stream().map(user -> mapper.map(user, AdminResponseDTO.class))
+				.collect(Collectors.toList());
+	}
 }
